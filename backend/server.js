@@ -24,10 +24,9 @@ db.connect((err) => {
     console.log("Connecté à la base de données MySQL");
 });
 
-//  VOITURE 
+/*   VOITURE   */
 
 //  GET - Toutes les voitures
-
 app.get("/voitures", (req, res) => {
     db.query("SELECT * FROM voitures", (err, result) => {
         if (err)
@@ -49,7 +48,6 @@ app.post("/voitures", (req, res) => {
         }
     );
 });
-
 
 // PUT - Modifier une voiture
 app.put("/voitures/:id", (req, res) => {
@@ -75,7 +73,7 @@ app.delete("/voitures/:id", (req, res) => {
     });
 });
 
-// USERS  
+/*  USERS   */
 
 // GET- Lire tous les utilisateurs (sans mot_de_passe)
 app.get('/users', (req, res) => {
@@ -100,8 +98,8 @@ app.post("/users", (req, res) => {
     const { nom, prenom, email, mot_de_passe, role } = req.body;
 
     // Hash the password before saving to DB
-    bcrypt.hash(mot_de_passe, 10, (err, hashedPassword ,result) => {
-        if (err) return res.status(500).send(err,result);
+    bcrypt.hash(mot_de_passe, 10, (err, hashedPassword, result) => {
+        if (err) return res.status(500).send(err, result);
 
         db.query(
             "INSERT INTO users (nom, prenom, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?)",
@@ -148,6 +146,63 @@ app.delete('/users/:id', (req, res) => {
         res.json({ message: 'Utilisateur supprimé' });
     });
 });
+
+/*  RESERVATION */
+
+// POST- Créer une réservation
+
+app.post('/reservations', (req, res) => {
+    const { user_id, voiture_id, date_debut, date_fin, montant_total } = req.body;
+
+    const sql = `INSERT INTO reservations (user_id, voiture_id, date_debut, date_fin, montant_total) VALUES (?, ?, ?, ?, ?)`;
+
+    db.query(sql, [user_id, voiture_id, date_debut, date_fin, montant_total], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.status(201).json({ message: 'Réservation créée', reservationId: result.insertId });
+    });
+}); 
+
+
+// GET- Lister toutes les réservations
+app.get('/reservations', (req, res) => {
+    db.query('SELECT * FROM reservations', (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.json(results);
+    });
+});
+
+//Obtenir une réservation par ID
+app.get('/reservations/:id', (req, res) => {
+    db.query('SELECT * FROM reservations WHERE id = ?', [req.params.id], (err, results) => {
+        if (err) return res.status(500).send(err);
+        if (results.length === 0) return res.status(404).send('Réservation non trouvée');
+        res.json(results[0]);
+    });
+});
+
+// PUT- Mettre à jour une réservation
+app.put('/reservations/:id', (req, res) => {
+    const { date_debut, date_fin, statut, montant_total } = req.body;
+    const sql = `
+    UPDATE reservations 
+    SET date_debut = ?, date_fin = ?, statut = ?, montant_total = ?
+    WHERE id = ?
+  `;
+
+    db.query(sql, [date_debut, date_fin, statut, montant_total, req.params.id], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: 'Réservation mise à jour' });
+    });
+});
+
+// DELETE- Supprimer une réservation
+app.delete('/reservations/:id', (req, res) => {
+    db.query('DELETE FROM reservations WHERE id = ?', [req.params.id], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: 'Réservation supprimée' });
+    });
+});
+
 
 // Démarrer le serveur
 app.listen(PORT, () => {
