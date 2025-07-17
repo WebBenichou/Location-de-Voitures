@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
     res.send('worked !')
 })
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:9000', credentials: true}));
 app.use(express.json());
 
 // Vérifie la connexion
@@ -147,7 +147,7 @@ app.delete('/users/:id', (req, res) => {
     });
 });
 
-/*  RESERVATION */
+/*  RESERVATION    */
 
 // POST- Créer une réservation
 
