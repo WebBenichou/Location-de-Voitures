@@ -8,6 +8,9 @@ import Accueil from "./pages/Accueil";
 import APropos from "./pages/APropos";
 import Contact from "./pages/Contact";
 import Reservation from "./pages/Reservation";
+import Login from "./componanets/Login";
+import AdminPage from "./pages/AdminPage";
+import UserPage from "./pages/UserPage";
 
 function App() {
   const [voitures, setVoitures] = useState([]);
@@ -32,6 +35,9 @@ function App() {
           <Route path="/reservation" element={<Reservation voitures={voitures} />} />
           <Route path="/admin/voitures" element={<VoituresList voitures={voitures} />} />
           <Route path="/admin/ajouter" element={<VoitureForm />} />
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/admin" element={<AdminPage/>}/>
+          <Route path="/user" element={<UserPage/>}/>
         </Routes>
       </div>
     </Router>

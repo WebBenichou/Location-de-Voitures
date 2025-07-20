@@ -1,91 +1,83 @@
 const express = require("express");
 const cors = require("cors");
-const db = require('./data/db')
+const db = require('./data/db');
 const bcrypt = require('bcrypt');
-
+const identificationRoutes = require("./routes/identification");
 
 const app = express();
 const PORT = 9000;
 
-app.get('/', (req, res) => {
-    res.send('worked !')
-})
-
-app.use(cors({ origin: 'http://localhost:9000', credentials: true}));
+// Middlewares
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
-
-// Vérifie la connexion
 
 db.connect((err) => {
     if (err) {
         console.error("Erreur de connexion à la base de données :", err);
         return;
     }
-    console.log("Connecté à la base de données MySQL");
+    console.log(" Connecté à la base de données MySQL");
 });
+app.get('/', (req, res) => {
+    res.send(' API de location de voitures opérationnelle');
+});
+app.use("/identification", identificationRoutes);
 
-/*   VOITURE   */
 
-//  GET - Toutes les voitures
+/*  VOITURES  */
+
+// GET toutes les voitures
 app.get("/voitures", (req, res) => {
     db.query("SELECT * FROM voitures", (err, result) => {
-        if (err)
-            res.status(500).send(err);
+        if (err) return res.status(500).send(err);
         res.json(result);
     });
 });
 
-// POST - Ajouter une voiture
+// POST ajouter une voiture
 app.post("/voitures", (req, res) => {
     const { marque, modele, annee, prix_par_jour, disponible } = req.body;
-    db.query(
-        "INSERT INTO voitures (marque, modele, annee, prix_par_jour, disponible) VALUES (?, ?, ?, ?, ?)",
-        [marque, modele, annee, prix_par_jour, disponible],
-        (err, result) => {
-
-            if (err) return res.status(500).send(err);
-            res.status(201).json({ message: "Voiture ajoutée avec succès" });
-        }
-    );
+    const sql = `INSERT INTO voitures (marque, modele, annee, prix_par_jour, disponible) VALUES (?, ?, ?, ?, ?)`;
+    db.query(sql, [marque, modele, annee, prix_par_jour, disponible], (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.status(201).json({ message: "Voiture ajoutée avec succès" });
+    });
 });
 
-// PUT - Modifier une voiture
+// PUT modifier une voiture
 app.put("/voitures/:id", (req, res) => {
     const { id } = req.params;
     const { marque, modele, annee, prix_par_jour, disponible } = req.body;
-    db.query(
-        "UPDATE voitures SET marque = ?, modele = ?, annee = ?, prix_par_jour = ?, disponible = ? WHERE id = ?",
-        [marque, modele, annee, prix_par_jour, disponible, id],
-        (err, result) => {
-            if (err) return res.status(500).send(err);
-            res.json({ message: "Voiture mise à jour avec succès" });
-        }
-    );
+    const sql = `UPDATE voitures SET marque = ?, modele = ?, annee = ?, prix_par_jour = ?, disponible = ? WHERE id = ?`;
+    db.query(sql, [marque, modele, annee, prix_par_jour, disponible, id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.json({ message: "Voiture mise à jour avec succès" });
+    });
 });
 
-
-// DELETE - Supprimer une voiture
+// DELETE voiture
 app.delete("/voitures/:id", (req, res) => {
-    const { id } = req.params;
-    db.query("DELETE FROM voitures WHERE id=?", [id], (err, result) => {
+    db.query("DELETE FROM voitures WHERE id = ?", [req.params.id], (err) => {
         if (err) return res.status(500).send(err);
         res.json({ message: "Voiture supprimée avec succès" });
     });
 });
 
-/*  USERS   */
 
-// GET- Lire tous les utilisateurs (sans mot_de_passe)
+/*   USERS   */
+
+// GET - Tous les utilisateurs (sans mot de passe)
 app.get('/users', (req, res) => {
-    const sql = 'SELECT id, nom, prenom, email, role, date_inscription FROM users';
+    const sql = 'SELECT id, nom, prenom, telephone, email, role, date_inscription FROM users';
     db.query(sql, (err, rows) => {
         if (err) return res.status(500).json(err);
         res.json(rows);
     });
 });
-//  Lire un utilisateur par ID
+
+// GET - Un utilisateur par ID
 app.get('/users/:id', (req, res) => {
-    const sql = 'SELECT id, nom, prenom, email, role, date_inscription FROM users WHERE id = ?';
+    const sql = 'SELECT id, nom, prenom, telephone, email, role, date_inscription FROM users WHERE id = ?';
     db.query(sql, [req.params.id], (err, rows) => {
         if (err) return res.status(500).json(err);
         if (rows.length === 0) return res.status(404).json({ message: 'Utilisateur non trouvé' });
@@ -93,32 +85,27 @@ app.get('/users/:id', (req, res) => {
     });
 });
 
-// POST- Créer un utilisateur
+// POST - Ajouter un utilisateur
 app.post("/users", (req, res) => {
-    const { nom, prenom, email, mot_de_passe, role } = req.body;
+    const { nom, prenom, telephone, email, mot_de_passe, role } = req.body;
 
-    // Hash the password before saving to DB
-    bcrypt.hash(mot_de_passe, 10, (err, hashedPassword, result) => {
-        if (err) return res.status(500).send(err, result);
+    bcrypt.hash(mot_de_passe, 10, (err, hashedPassword) => {
+        if (err) return res.status(500).send(err);
 
-        db.query(
-            "INSERT INTO users (nom, prenom, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?)",
-            [nom, prenom, email, hashedPassword, role],
-            (err, result) => {
-                if (err) return res.status(500).send(err);
-                res.status(201).json({ message: "Utilisateur ajouté avec succès" });
-            }
-        );
+        const sql = `INSERT INTO users (nom, prenom, telephone, email, mot_de_passe, role) VALUES (?, ?, ?, ?, ?, ?)`;
+        db.query(sql, [nom, prenom, telephone, email, hashedPassword, role], (err) => {
+            if (err) return res.status(500).send(err);
+            res.status(201).json({ message: "Utilisateur ajouté avec succès" });
+        });
     });
 });
 
-// PUT- Modifier un utilisateur
+// PUT - Modifier un utilisateur
 app.put('/users/:id', async (req, res) => {
     try {
-        const { nom, prenom, email, mot_de_passe, role } = req.body;
-
-        let sql = 'UPDATE users SET nom = ?, prenom = ?, email = ?, role = ?';
-        const params = [nom, prenom, email, role];
+        const { nom, prenom, telephone, email, mot_de_passe, role } = req.body;
+        let sql = 'UPDATE users SET nom = ?, prenom = ?, telephone = ?, email = ?, role = ?';
+        const params = [nom, prenom, telephone, email, role];
 
         if (mot_de_passe) {
             const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
@@ -129,7 +116,7 @@ app.put('/users/:id', async (req, res) => {
         sql += ' WHERE id = ?';
         params.push(req.params.id);
 
-        db.query(sql, params, (err, result) => {
+        db.query(sql, params, (err) => {
             if (err) return res.status(500).json(err);
             res.json({ message: 'Utilisateur mis à jour' });
         });
@@ -138,32 +125,30 @@ app.put('/users/:id', async (req, res) => {
     }
 });
 
-// DELET- Supprimer un utilisateur
+// DELETE - Supprimer un utilisateur
 app.delete('/users/:id', (req, res) => {
     const sql = 'DELETE FROM users WHERE id = ?';
-    db.query(sql, [req.params.id], (err, result) => {
+    db.query(sql, [req.params.id], (err) => {
         if (err) return res.status(500).json(err);
         res.json({ message: 'Utilisateur supprimé' });
     });
 });
 
-/*  RESERVATION    */
 
-// POST- Créer une réservation
+/*  RESERVATIONS */
 
+
+// POST - Créer une réservation
 app.post('/reservations', (req, res) => {
     const { user_id, voiture_id, date_debut, date_fin, montant_total } = req.body;
-
     const sql = `INSERT INTO reservations (user_id, voiture_id, date_debut, date_fin, montant_total) VALUES (?, ?, ?, ?, ?)`;
-
     db.query(sql, [user_id, voiture_id, date_debut, date_fin, montant_total], (err, result) => {
         if (err) return res.status(500).send(err);
         res.status(201).json({ message: 'Réservation créée', reservationId: result.insertId });
     });
-}); 
+});
 
-
-// GET- Lister toutes les réservations
+// GET - Lister toutes les réservations
 app.get('/reservations', (req, res) => {
     db.query('SELECT * FROM reservations', (err, results) => {
         if (err) return res.status(500).send(err);
@@ -171,7 +156,7 @@ app.get('/reservations', (req, res) => {
     });
 });
 
-//Obtenir une réservation par ID
+// GET - Réservation par ID
 app.get('/reservations/:id', (req, res) => {
     db.query('SELECT * FROM reservations WHERE id = ?', [req.params.id], (err, results) => {
         if (err) return res.status(500).send(err);
@@ -180,31 +165,31 @@ app.get('/reservations/:id', (req, res) => {
     });
 });
 
-// PUT- Mettre à jour une réservation
+// PUT - Modifier une réservation
 app.put('/reservations/:id', (req, res) => {
     const { date_debut, date_fin, statut, montant_total } = req.body;
     const sql = `
-    UPDATE reservations 
-    SET date_debut = ?, date_fin = ?, statut = ?, montant_total = ?
-    WHERE id = ?
-  `;
-
-    db.query(sql, [date_debut, date_fin, statut, montant_total, req.params.id], (err, result) => {
+        UPDATE reservations 
+        SET date_debut = ?, date_fin = ?, statut = ?, montant_total = ?
+        WHERE id = ?
+    `;
+    db.query(sql, [date_debut, date_fin, statut, montant_total, req.params.id], (err) => {
         if (err) return res.status(500).send(err);
         res.json({ message: 'Réservation mise à jour' });
     });
 });
 
-// DELETE- Supprimer une réservation
+// DELETE - Supprimer une réservation
 app.delete('/reservations/:id', (req, res) => {
-    db.query('DELETE FROM reservations WHERE id = ?', [req.params.id], (err, result) => {
+    db.query('DELETE FROM reservations WHERE id = ?', [req.params.id], (err) => {
         if (err) return res.status(500).send(err);
         res.json({ message: 'Réservation supprimée' });
     });
 });
 
 
-// Démarrer le serveur
+
+// Lancer le serveur
 app.listen(PORT, () => {
-    console.log('Serveur lancé sur http://localhost:' + PORT);
+    console.log(`Serveur lancé sur http://localhost:${PORT}`);
 });
