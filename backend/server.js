@@ -33,6 +33,20 @@ app.get("/voitures", (req, res) => {
         res.json(result);
     });
 });
+// GET- voiture ID
+app.get("/voitures/:id", (req, res) => {
+    const voitureId = req.params.id;
+
+    const sql = "SELECT * FROM voitures WHERE id = ?";
+    db.query(sql, [voitureId], (err, result) => {
+        if (err) return res.status(500).send(err);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Voiture non trouvée" });
+        }
+        res.json(result[0]); // une seule voiture
+    });
+});
 
 // POST ajouter une voiture
 app.post("/voitures", (req, res) => {

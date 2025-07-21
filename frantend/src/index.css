@@ -1,1 +1,39 @@
- 
+ .footer {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+
+.text-muted {
+    color: #adb5bd !important;
+}
+
+.text-muted:hover {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.social-icons a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+.list-unstyled a:hover {
+    padding-left: 5px;
+}
