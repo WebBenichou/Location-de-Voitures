@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ListeVoitures() {
+export default function VoituresListe() {
     const [voitures, setVoitures] = useState([]);
     const [erreur, setErreur] = useState("");
 
@@ -39,10 +39,11 @@ export default function ListeVoitures() {
             {voitures.length === 0 ? (
                 <p>Aucune voiture disponible.</p>
             ) : (
-                <table className="table-voitures">
+                <table className="table-voitures" border="1" cellPadding="10">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Image</th>
                             <th>Marque</th>
                             <th>Modèle</th>
                             <th>Année</th>
@@ -55,15 +56,18 @@ export default function ListeVoitures() {
                         {voitures.map(v => (
                             <tr key={v.id}>
                                 <td>{v.id}</td>
+                                <td>
+                                    {v.image_url ? (
+                                        <img src={`http://localhost:9000${v.image_url}`} alt={v.modele} width="80" />
+                                    ) : "Aucune"}
+                                </td>
                                 <td>{v.marque}</td>
                                 <td>{v.modele}</td>
                                 <td>{v.annee}</td>
                                 <td>{v.prix_par_jour} MAD</td>
                                 <td>{v.disponible ? "Oui" : "Non"}</td>
                                 <td>
-                                    <button title="Supprimer cette voiture" onClick={() => supprimer(v.id)}>
-                                        🗑 Supprimer
-                                    </button>
+                                    <button onClick={() => supprimer(v.id)}>🗑 Supprimer</button>
                                 </td>
                             </tr>
                         ))}

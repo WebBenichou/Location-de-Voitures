@@ -69,10 +69,10 @@ const Contact = () => {
                 <div className="col-md-6">
                     <h2>Coordonnées</h2>
                     <p>
-                        <strong>Adresse:</strong> 123 Avenue des Champs-Élysées, 75008 Paris
+                        <strong>Adresse:</strong> Nahda 45, 22000 Azilal, Maroc
                     </p>
                     <p>
-                        <strong>Téléphone:</strong> 01 23 45 67 89
+                        <strong>Téléphone:</strong>06 02 39 35 64 
                     </p>
                     <p>
                         <strong>Email:</strong> contact@benichouluxcar.com
@@ -80,7 +80,7 @@ const Contact = () => {
                     <div className="mt-4">
                         <iframe
                             title="Localisation"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.292292615674389!3d48.858370079287475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1623258136843!5m2!1sfr!2sfr"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d355.80253853536783!2d-6.56697305780484!3d31.96135022113556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda49b00746240c5%3A0x71e831d9c359307f!2z2YXZhti12Kkg2KfZhNi02KjYp9ioINij2LLZitmE2KfZhA!5e0!3m2!1sfr!2sma!4v1753105188999!5m2!1sfr!2sma"
                             width="100%"
                             height="300"
                             style={{ border: 0 }}

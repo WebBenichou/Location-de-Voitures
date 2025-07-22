@@ -32,7 +32,7 @@ const Reservation = ({ voitures }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Ici vous ajouteriez la logique pour enregistrer la réservation
+
         console.log('Réservation:', { car: selectedCar, ...formData });
         alert('Votre réservation a été enregistrée avec succès!');
         navigate('/');
@@ -48,7 +48,7 @@ const Reservation = ({ voitures }) => {
                         {selectedCar ? (
                             <div className="mb-4 p-3 bg-light rounded">
                                 <h4>Vous réservez: {selectedCar.marque} {selectedCar.modele}</h4>
-                                <p>Prix: {selectedCar.prix}€/jour</p>
+                                <p>Prix: {selectedCar.prix_par_jour} DH/jour</p>
                             </div>
                         ) : (
                             <div className="mb-3">
@@ -61,7 +61,7 @@ const Reservation = ({ voitures }) => {
                                     <option value="">Sélectionnez un véhicule</option>
                                     {voitures.map(voiture => (
                                         <option key={voiture._id} value={voiture._id}>
-                                            {voiture.marque} {voiture.modele} - {voiture.prix}€/jour
+                                            {voiture.marque} {voiture.modele}  {voiture.prix_par_jour} DH/jour
                                         </option>
                                     ))}
                                 </select>
@@ -144,18 +144,23 @@ const Reservation = ({ voitures }) => {
                 <div className="col-md-6">
                     {selectedCar && (
                         <div className="card">
-                            <img src={selectedCar.image} className="card-img-top" alt={selectedCar.marque} />
+                            <img
+                                src={`http://localhost:9000${selectedCar.image_url}`}
+                                className="card-img-top"
+                                alt={`${selectedCar.marque} ${selectedCar.modele}`}
+                            />
                             <div className="card-body">
                                 <h5 className="card-title">{selectedCar.marque} {selectedCar.modele}</h5>
                                 <ul className="list-group list-group-flush">
-                                    <li className="list-group-item">Prix: {selectedCar.prix}€/jour</li>
-                                    <li className="list-group-item">Année: {selectedCar.annee}</li>
-                                    <li className="list-group-item">Carburant: {selectedCar.carburant}</li>
+                                    <li className="list-group-item">Prix : {selectedCar.prix_par_jour} DH/jour</li>
+                                    <li className="list-group-item">Année : {selectedCar.annee}</li>
+                                    <li className="list-group-item">Carburant : {selectedCar.carburant}</li>
                                 </ul>
                             </div>
                         </div>
                     )}
                 </div>
+
             </div>
         </div>
     );

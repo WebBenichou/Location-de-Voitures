@@ -11,9 +11,14 @@ const NavBar = ({ isAdmin, toggleAdminMode }) => {
   const closeMenu = () => setExpanded(false);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-      <Link to="/" className="navbar-brand d-flex align-items-center">
-        <FaCar className="me-2" />
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-4">
+      <Link to="/" className="navbar-brand d-flex align-items-center text-primary fw-bold fs-4">
+        <img
+          src="images/Car Logo.png"
+          alt=""
+          style={{ height: '60px', marginRight: '20px' , borderRadius:"5px"}}
+        />
+        <FaCar className="me-2 text-primary" />
         Benichou Lux Car
       </Link>
 
@@ -32,6 +37,9 @@ const NavBar = ({ isAdmin, toggleAdminMode }) => {
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
             <Link to="/" className="nav-link" onClick={closeMenu}>Accueil</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/voitures" className="nav-link" onClick={closeMenu}>Voitures</Link>
           </li>
           <li className="nav-item">
             <Link to="/reservation" className="nav-link" onClick={closeMenu}>Réservation</Link>
