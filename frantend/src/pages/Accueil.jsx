@@ -2,36 +2,67 @@ import React from "react";
 import { Carousel, Card, Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+
 export default function Accueil({ voitures }) {
     return (
         <div>
             {/* Carrousel principal */}
             <Carousel fade>
                 <Carousel.Item>
-                    <img className="d-block w-100" src="images/Lux-Car.png" alt="voiture" />
+                    <img className="d-block w-100" src="images/location-2.jpg" alt="voiture" />
                     <Carousel.Caption>
-                        <h3>Louez la voiture de vos rêves</h3>
+                        <h1>Louez la voiture de vos rêves</h1>
                         <p>Rapide, facile et à petit prix.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                    <img className="d-block w-100" src="images/Car Logo.png" alt="voiture luxe" />
+                    <img className="d-block w-100" src="images/location-1.jpg" alt="voiture luxe" style={{ height: "850px", width: "100%" }} />
                     <Carousel.Caption>
-                        <h3>Confort et sécurité</h3>
+                        <h1>Confort et sécurité</h1>
                         <p>Nos voitures sont bien entretenues et assurées.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                    <img className="d-block w-100" src="https://source.unsplash.com/1600x500/?road-trip" alt="route" />
+                    <img className="d-block w-100" src="images/location-3.jpg" alt="route" />
                     <Carousel.Caption>
-                        <h3>Partez à l'aventure</h3>
+                        <h1>Partez à l'aventure</h1>
                         <p>Réservez maintenant votre prochain trajet !</p>
                     </Carousel.Caption>
                 </Carousel.Item>
             </Carousel>
 
-            {/* Liste des voitures en card */}
-            <Container className="mt-5">
+            {/* Liste des voitures en cards */}
+            <Container className="py-5">
+                <h2 className="text-center mb-4">Nos voitures disponibles</h2>
+                <Row>
+                    {voitures && voitures.map((voiture) => (
+                        <Col md={4} className="mb-4" key={voiture.id}>
+                            <Card className="h-100 shadow-sm">
+                                <Card.Img variant="top" src={voiture.image_url} alt={voiture.marque} style={{ height: "200px", objectFit: "cover" }} />
+                                <Card.Body>
+                                    <Card.Title>{voiture.marque} {voiture.modele}</Card.Title>
+                                    <div className="d-flex justify-content-between">
+                                        <Link to={`/voitures/${voiture.id}`}>
+                                            <Button variant="outline-primary">Voir plus</Button>
+                                        </Link>
+                                        <Link to={`/reservation?car=${voiture._id}`}>
+                                            <Button variant="primary">Réserver</Button>
+                                        </Link>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </Container>
+        </div>
+    );
+}
+
+
+
+/*
+ <Container className="mt-5">
                 <h2 className="text-center mb-4">Nos voitures disponibles</h2>
                 <Row>
                     {voitures && voitures.length > 0 ? (
@@ -68,6 +99,4 @@ export default function Accueil({ voitures }) {
                     )}
                 </Row>
             </Container>
-        </div>
-    );
-}
+*/

@@ -6,6 +6,7 @@ const path = require("path");
 const bcrypt = require('bcrypt');
 
 const identificationRoutes = require("./routes/identification");
+const { log } = require("console");
 // const imageRoutes = require("./routes/imageRoutes"); // Décommenter si tu as ce fichier
 
 const app = express();
@@ -73,10 +74,14 @@ app.get("/voitures/:id", (req, res) => {
 app.post("/voitures", upload.single("image"), (req, res) => {
     const { marque, modele, annee, prix_par_jour, disponible } = req.body;
     const dispo = disponible === 'true' || disponible === true ? 1 : 0;
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const image_url = req.file;
+    console.log(image_url);
+    
+
+
 
     const sql = `INSERT INTO voitures (marque, modele, annee, prix_par_jour, disponible, image_url) VALUES (?, ?, ?, ?, ?, ?)`;
-    db.query(sql, [marque, modele, annee, prix_par_jour, dispo, image_url], (err) => {
+    db.query(sql, [marque, modele, annee, prix_par_jour, dispo, image_url.filename], (err) => {
         if (err) {
             console.error("Erreur SQL POST voitures:", err);
             return res.status(500).json({ error: "Erreur serveur interne" });

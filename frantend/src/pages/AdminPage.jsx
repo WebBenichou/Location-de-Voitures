@@ -17,6 +17,7 @@ const AdminPage = () => {
 
   // Chargement initial des voitures
   useEffect(() => {
+
     fetchVoitures();
   }, []);
 
@@ -24,6 +25,8 @@ const AdminPage = () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:9000/voitures");
+      console.log(res);
+      
       setVoitures(res.data);
       setError(null);
     } catch (err) {
@@ -219,7 +222,7 @@ const AdminPage = () => {
                 <td>{v.disponible ? "Oui" : "Non"}</td>
                 <td>
                   {v.image_url ? (
-                    <img src={v.image_url} alt="voiture" style={{ width: "80px" }} />
+                    <img src={"http://localhost:9000/uploads/"+v.image_url} alt="voiture" style={{ width: "80px" }} />
                   ) : (
                     "—"
                   )}

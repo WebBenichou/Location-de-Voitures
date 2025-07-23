@@ -12,15 +12,16 @@ const NavBar = ({ isAdmin, toggleAdminMode }) => {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-4">
-      <Link to="/" className="navbar-brand d-flex align-items-center text-primary fw-bold fs-4">
-        <img
-          src="images/Car Logo.png"
-          alt=""
-          style={{ height: '60px', marginRight: '20px' , borderRadius:"5px"}}
-        />
-        <FaCar className="me-2 text-primary" />
-        Benichou Lux Car
-      </Link>
+      <Link to="/" className="navbar-brand d-flex align-items-center fw-bold fs-4" style={{ color: '#eba40cff' }}>
+  <img
+    src="images/Lux-Car.png"
+    alt=""
+    style={{ height: '100px', marginRight: '20px', borderRadius: "5px" }}
+  />
+  <FaCar className="me-2" />
+  Benichou Lux Car
+</Link>
+
 
       <button
         className="navbar-toggler"
@@ -62,6 +63,8 @@ const NavBar = ({ isAdmin, toggleAdminMode }) => {
           <FaUser className="me-2" />
           {isAdmin ? 'Mode Client' : 'Mode Admin'}
         </button>
+
+
       </div>
     </nav>
   );
