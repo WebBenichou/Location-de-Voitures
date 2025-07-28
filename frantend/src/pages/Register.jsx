@@ -96,7 +96,7 @@ const Register = () => {
                         required 
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">inscription </button>
+                <button type="submit" className="btn btn-warning">inscription </button>
             </form>
             {message && <div className="mt-3 alert alert-info">{message}</div>}
         </div>

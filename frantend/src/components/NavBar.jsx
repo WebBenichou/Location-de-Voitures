@@ -17,14 +17,9 @@ const NavBar = ({ user }) => {
           src="images/Lux-Car.png"
           alt=""
           style={{ height: '100px', marginRight: '20px', borderRadius: "5px" }}
-        />
-        <FaCar className="me-2" />
+        />       
         Benichou Lux Car
       </Link>
-
-
-      
-
       <div className={`collapse navbar-collapse${expanded ? ' show' : ''}`} id="navbarNav">
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">

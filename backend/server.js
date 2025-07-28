@@ -91,7 +91,7 @@ app.post("/voitures", upload.single("image"), (req, res) => {
 // PUT modifier une voiture
 app.put("/voitures/:id", (req, res) => {
     const { id } = req.params;
-    const { marque, modele, annee, prix_par_jour, disponible } = req.body;
+    const { marque, modele, annee, prix_par_jour, disponible, } = req.body;
 
     const sql = `UPDATE voitures SET marque = ?, modele = ?, annee = ?, prix_par_jour = ?, disponible = ? WHERE id = ?`;
     db.query(sql, [marque, modele, annee, prix_par_jour, disponible, id], (err) => {
@@ -212,6 +212,52 @@ app.put('/reservations/:id', (req, res) => {
     db.query(sql, [date_debut, date_fin, statut, montant_total, req.params.id], (err) => {
         if (err) return res.status(500).send(err);
         res.json({ message: 'Réservation mise à jour' });
+    });
+});
+// PUT uniquement pour modifier le statut d'une réservation
+app.put('/reservations/:id/statut', (req, res) => {
+    const { statut } = req.body;
+    const reservationId = req.params.id;
+
+    // Validation du statut
+    const statutsValides = ["acceptée", "rejetée", "en attente"];
+    if (!statutsValides.includes(statut)) {
+        return res.status(400).json({ message: "Statut invalide" });
+    }
+
+    // 1. Mettre à jour le statut de la réservation
+    const updateSql = `UPDATE reservations SET statut = ? WHERE id = ?`;
+    db.query(updateSql, [statut, reservationId], (err) => {
+        if (err) {
+            console.error("Erreur lors de la mise à jour du statut :", err);
+            return res.status(500).json({ message: "Erreur serveur" });
+        }
+
+        // 2. Si le statut est "acceptée", rendre la voiture non disponible
+        if (statut === "acceptée") {
+            // Récupérer la voiture associée à la réservation
+            const getVoitureSql = `SELECT voiture_id FROM reservations WHERE id = ?`;
+            db.query(getVoitureSql, [reservationId], (err, results) => {
+                if (err || results.length === 0) {
+                    return res.status(500).json({ message: "Erreur lors de la récupération de la voiture" });
+                }
+
+                const voitureId = results[0].voiture_id;
+
+                // Mettre à jour la disponibilité de la voiture
+                const updateVoitureSql = `UPDATE voitures SET disponible = 0 WHERE id = ?`;
+                db.query(updateVoitureSql, [voitureId], (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la disponibilité de la voiture :", err);
+                        return res.status(500).json({ message: "Statut modifié, mais erreur sur la voiture" });
+                    }
+
+                    res.json({ message: `Réservation acceptée et voiture rendue indisponible` });
+                });
+            });
+        } else {
+            res.json({ message: `Statut de la réservation mis à jour en '${statut}'` });
+        }
     });
 });
 

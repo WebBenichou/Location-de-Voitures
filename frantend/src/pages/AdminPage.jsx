@@ -2,20 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { FaSignInAlt, FaUserPlus, FaSignOutAlt } from "react-icons/fa";
-import ReservationsPage from "./ReservatuinsPage";
+import ReservationsPage from "./ReservationsPage";
 import ClientsPage from "./ClientsPage";
 
 const Sidebar = ({ active, setActive }) => {
   return (
     <div style={{
       width: 220,
-      backgroundColor: "#2c3e50",
+      backgroundColor: "hsla(213, 16%, 14%, 1.00)",
       color: "white",
       minHeight: "100vh",
       padding: 20,
-      boxSizing: "border-box"
+      boxSizing: "border-box",
+      borderRadius:"0 80px"
     }}>
-      <h2 style={{ textAlign: "center", marginBottom: 30 }}>Admin Panel</h2>
+      <h2 style={{ textAlign: "center", marginBottom: 30 }}><strong>Admin Panel</strong></h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         <li
           onClick={() => setActive("voitures")}
@@ -23,7 +24,7 @@ const Sidebar = ({ active, setActive }) => {
             padding: "10px 15px",
             marginBottom: 10,
             cursor: "pointer",
-            backgroundColor: active === "voitures" ? "#3498db" : "transparent",
+            backgroundColor: active === "voitures" ? "#f0b40eff" : "transparent",
             borderRadius: 5,
           }}
         >Voitures</li>
@@ -33,7 +34,7 @@ const Sidebar = ({ active, setActive }) => {
             padding: "10px 15px",
             marginBottom: 10,
             cursor: "pointer",
-            backgroundColor: active === "reservations" ? "#3498db" : "transparent",
+            backgroundColor: active === "reservations" ? "#f0b40eff" : "transparent",
             borderRadius: 5,
           }}
         >Réservations</li>
@@ -43,7 +44,7 @@ const Sidebar = ({ active, setActive }) => {
             padding: "10px 15px",
             marginBottom: 10,
             cursor: "pointer",
-            backgroundColor: active === "clients" ? "#3498db" : "transparent",
+            backgroundColor: active === "clients" ? "#f0b40eff" : "transparent",
             borderRadius: 5,
           }}
         >Clients</li>
@@ -100,7 +101,7 @@ const AdminPage = () => {
   const renderVoitures = () => (
     <>
       <div>
-        <NavLink to={"/ajoute"} className="btn btn-primary mb-3">Ajouter une voiture</NavLink>
+        <NavLink to={"/ajoute"} className="btn btn-warning mb-3">Ajouter une voiture</NavLink>
       </div>
       {loading ? (
         <p>Chargement...</p>
@@ -162,7 +163,7 @@ const AdminPage = () => {
 
   /* ------------- Résérvations ---------- */
   return (
-    <div style={{ display: "flex" }}>
+     <div style={{ display: "flex" }}>
       <Sidebar active={activeSection} setActive={setActiveSection} />
 
       <div style={{ flex: 1, padding: 30 }}>
@@ -170,7 +171,7 @@ const AdminPage = () => {
         <div className="d-flex justify-content-end mb-3">
           {!user ? (
             <>
-              <button className="btn btn-outline-primary me-2" onClick={handleLogin}>
+              <button className="btn btn-outline-warning me-2" onClick={handleLogin}>
                 <FaSignInAlt className="me-2" /> Login
               </button>
               <button className="btn btn-outline-secondary">
@@ -179,8 +180,10 @@ const AdminPage = () => {
             </>
           ) : (
             <div className="d-flex align-items-center">
-              <span className="me-3">Bienvenue, <strong>{user.name}</strong></span>
-              <button className="btn btn-outline-danger" onClick={handleLogout}>
+              <span className="me-3">
+                Bienvenue, <strong>{user.name}</strong>
+              </span>
+              <button className="btn btn-outline-warning" onClick={handleLogout}>
                 <FaSignOutAlt className="me-2" /> Logout
               </button>
             </div>

@@ -135,7 +135,7 @@ const Reservation = ({ voitures }) => {
                             </div>
                         </div>
 
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="btn btn-warning">
                             Confirmer la réservation
                         </button>
                     </form>

@@ -65,7 +65,7 @@ export default function ModifierVoiture() {
         console.log("formdata ", formData);
 
         try {
-            formData.append("marque", "test");
+            formData.append("marque", form.marque);
             formData.append("modele", form.modele);
             formData.append("annee", form.annee);
             formData.append("prix_par_jour", form.prix_par_jour);

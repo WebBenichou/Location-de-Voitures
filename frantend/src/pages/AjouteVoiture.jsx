@@ -237,7 +237,7 @@ export default function AjouteVoiture() {
                     <div className="col-12 mt-3">
                         <button
                             type="submit"
-                            className="btn btn-primary px-4"
+                            className="btn btn-warning px-4"
                             disabled={loading}
                         >
                             {loading ? (

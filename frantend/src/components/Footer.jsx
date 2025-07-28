@@ -14,8 +14,8 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
-        <footer className="bg-dark text-warning mt-5 py-4 footer">
-            <Container>
+        <footer className="bg-dark text-warning mt-5 py-4 px-5 footer">
+            
                 <Row className="g-4">
                     {/* Logo et description */}
                     <Col lg={3} md={6} className="mb-4 mb-md-0">
@@ -23,11 +23,9 @@ const Footer = () => {
                             <img
                                 src="images/Lux-Car.png"
                                 alt=""
-                                style={{ height: '100px', marginRight: '20px', borderRadius: "5px" }}
-                            />
-                            <FaCar className="text-primary fs-3 me-2" />
+                                style={{ height: '100px', marginRight: '20px', borderRadius: "5px" }}                            />                            
 
-                            <span className="h5 mb-0"  style={{ color: '#c78d0fff' }} ><strong>Benichou Lux Car</strong></span>
+                            <span className="h5 mb-0"  style={{ color: '#f1aa10ff' }} ><strong>Benichou Lux Car</strong></span>
                         </div>
                         <p className="text-light">
                             Location de véhicules haut de gamme à Azilal. Service premium et tarifs compétitifs.
@@ -119,7 +117,7 @@ const Footer = () => {
                         </p>
                     </Col>
                 </Row>
-            </Container>
+            
         </footer>
     );
 };
