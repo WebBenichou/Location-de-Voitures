@@ -1,32 +1,78 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
+import { FaSignInAlt, FaUserPlus, FaSignOutAlt } from "react-icons/fa";
+import ReservationsPage from "./ReservatuinsPage";
+import ClientsPage from "./ClientsPage";
+
+const Sidebar = ({ active, setActive }) => {
+  return (
+    <div style={{
+      width: 220,
+      backgroundColor: "#2c3e50",
+      color: "white",
+      minHeight: "100vh",
+      padding: 20,
+      boxSizing: "border-box"
+    }}>
+      <h2 style={{ textAlign: "center", marginBottom: 30 }}>Admin Panel</h2>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        <li
+          onClick={() => setActive("voitures")}
+          style={{
+            padding: "10px 15px",
+            marginBottom: 10,
+            cursor: "pointer",
+            backgroundColor: active === "voitures" ? "#3498db" : "transparent",
+            borderRadius: 5,
+          }}
+        >Voitures</li>
+        <li
+          onClick={() => setActive("reservations")}
+          style={{
+            padding: "10px 15px",
+            marginBottom: 10,
+            cursor: "pointer",
+            backgroundColor: active === "reservations" ? "#3498db" : "transparent",
+            borderRadius: 5,
+          }}
+        >Réservations</li>
+        <li
+          onClick={() => setActive("clients")}
+          style={{
+            padding: "10px 15px",
+            marginBottom: 10,
+            cursor: "pointer",
+            backgroundColor: active === "clients" ? "#3498db" : "transparent",
+            borderRadius: 5,
+          }}
+        >Clients</li>
+      </ul>
+    </div>
+  );
+};
 
 const AdminPage = () => {
+  const [activeSection, setActiveSection] = useState("voitures");
   const [voitures, setVoitures] = useState([]);
-  const [form, setForm] = useState({
-    marque: "",
-    modele: "",
-    annee: "",
-    prix_par_jour: "",
-    disponible: true,
-    image: null,
-  });
-  const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Chargement initial des voitures
-  useEffect(() => {
+  // Simuler utilisateur connecté
+  const [user, setUser] = useState(null);
+  const handleLogin = () => setUser({ name: "Admin Redouane" });
+  const handleLogout = () => setUser(null);
 
-    fetchVoitures();
-  }, []);
+  useEffect(() => {
+    if (activeSection === "voitures") {
+      fetchVoitures();
+    }
+  }, [activeSection]);
 
   const fetchVoitures = async () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:9000/voitures");
-      console.log(res);
-      
       setVoitures(res.data);
       setError(null);
     } catch (err) {
@@ -35,66 +81,6 @@ const AdminPage = () => {
     setLoading(false);
   };
 
-  // Gérer les changements dans le formulaire
-  const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-    if (name === "image") {
-      setForm((prev) => ({ ...prev, image: files[0] }));
-    } else {
-      setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
-    }
-  };
-
-  // Soumettre formulaire ajout ou modification
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const formData = new FormData();
-      formData.append("marque", form.marque);
-      formData.append("modele", form.modele);
-      formData.append("annee", form.annee);
-      formData.append("prix_par_jour", form.prix_par_jour);
-      formData.append("disponible", form.disponible);
-      if (form.image) formData.append("image", form.image);
-
-      if (editId) {
-        // Modifier voiture
-        await axios.put(`http://localhost:9000/voitures/${editId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-      } else {
-        // Ajouter voiture
-        await axios.post("http://localhost:9000/voitures", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-      }
-      setForm({ marque: "", modele: "", annee: "", prix_par_jour: "", disponible: true, image: null });
-      setEditId(null);
-      fetchVoitures();
-      setError(null);
-    } catch (err) {
-      setError("Erreur lors de l'enregistrement");
-    }
-    setLoading(false);
-  };
-
-  // Préparer édition voiture
-  const handleEdit = (voiture) => {
-    setForm({
-      marque: voiture.marque,
-      modele: voiture.modele,
-      annee: voiture.annee,
-      prix_par_jour: voiture.prix_par_jour,
-      disponible: voiture.disponible,
-      image: null,
-    });
-    setEditId(voiture.id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // Supprimer voiture
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous vraiment supprimer cette voiture ?")) {
       setLoading(true);
@@ -109,87 +95,17 @@ const AdminPage = () => {
     }
   };
 
-  return (
-    <div className="container mt-4">
-      <h2>Espace Admin - Gestion des voitures</h2>
+  /*  ---------- voitutre --------------- */
 
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className="mb-4">
-        <div className="row g-2 align-items-center">
-          <div className="col-md-2">
-            <input
-              type="text"
-              name="marque"
-              placeholder="Marque"
-              value={form.marque}
-              onChange={handleChange}
-              required
-              className="form-control"
-            />
-          </div>
-          <div className="col-md-2">
-            <input
-              type="text"
-              name="modele"
-              placeholder="Modèle"
-              value={form.modele}
-              onChange={handleChange}
-              required
-              className="form-control"
-            />
-          </div>
-          <div className="col-md-2">
-            <input
-              type="number"
-              name="annee"
-              placeholder="Année"
-              value={form.annee}
-              onChange={handleChange}
-              required
-              className="form-control"
-              min="1900"
-              max={new Date().getFullYear()}
-            />
-          </div>
-          <div className="col-md-2">
-            <input
-              type="number"
-              name="prix_par_jour"
-              placeholder="Prix par jour (MAD)"
-              value={form.prix_par_jour}
-              onChange={handleChange}
-              required
-              className="form-control"
-              min="0"
-            />
-          </div>
-          <div className="col-md-2 d-flex align-items-center">
-            <input
-              type="checkbox"
-              name="disponible"
-              checked={form.disponible}
-              onChange={handleChange}
-              className="form-check-input"
-              id="disponibleCheck"
-            />
-            <label htmlFor="disponibleCheck" className="ms-2">
-              Disponible
-            </label>
-          </div>
-          <div className="col-md-3">
-            <input type="file" name="image" accept="image/*" onChange={handleChange} className="form-control" />
-          </div>
-          <div className="col-md-1">
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {editId ? "Modifier" : "Ajouter"}
-            </button>
-          </div>
-        </div>
-      </form>
-
+  const renderVoitures = () => (
+    <>
+      <div>
+        <NavLink to={"/ajoute"} className="btn btn-primary mb-3">Ajouter une voiture</NavLink>
+      </div>
       {loading ? (
         <p>Chargement...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
       ) : (
         <table className="table table-bordered">
           <thead className="table-light">
@@ -205,41 +121,77 @@ const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {voitures.length === 0 && (
+            {voitures.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center">
-                  Aucune voiture trouvée.
-                </td>
+                <td colSpan="8" className="text-center">Aucune voiture trouvée.</td>
               </tr>
+            ) : (
+              voitures.map((v) => (
+                <tr key={v.id}>
+                  <td>{v.id}</td>
+                  <td>{v.marque}</td>
+                  <td>{v.modele}</td>
+                  <td>{v.annee}</td>
+                  <td>{v.prix_par_jour} MAD</td>
+                  <td>{v.disponible ? "Oui" : "Non"}</td>
+                  <td>
+                    {v.image_url ? (
+                      <img
+                        src={`http://localhost:9000/uploads/${v.image_url}`}
+                        alt="voiture"
+                        style={{ width: "80px" }}
+                      />
+                    ) : "—"}
+                  </td>
+                  <td>
+                    <NavLink to={`/modifier/${v.id}`} className="btn btn-warning btn-sm me-2">
+                      Modifier
+                    </NavLink>
+                    <button onClick={() => handleDelete(v.id)} className="btn btn-danger btn-sm">
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
-            {voitures.map((v) => (
-              <tr key={v.id}>
-                <td>{v.id}</td>
-                <td>{v.marque}</td>
-                <td>{v.modele}</td>
-                <td>{v.annee}</td>
-                <td>{v.prix_par_jour} MAD</td>
-                <td>{v.disponible ? "Oui" : "Non"}</td>
-                <td>
-                  {v.image_url ? (
-                    <img src={"http://localhost:9000/uploads/"+v.image_url} alt="voiture" style={{ width: "80px" }} />
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td>
-                  <button onClick={() => handleEdit(v)} className="btn btn-warning btn-sm me-2">
-                    Modifier
-                  </button>
-                  <button onClick={() => handleDelete(v.id)} className="btn btn-danger btn-sm">
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            ))}
           </tbody>
         </table>
       )}
+    </>
+  );
+
+  /* ------------- Résérvations ---------- */
+  return (
+    <div style={{ display: "flex" }}>
+      <Sidebar active={activeSection} setActive={setActiveSection} />
+
+      <div style={{ flex: 1, padding: 30 }}>
+        {/* Barre Login / Logout */}
+        <div className="d-flex justify-content-end mb-3">
+          {!user ? (
+            <>
+              <button className="btn btn-outline-primary me-2" onClick={handleLogin}>
+                <FaSignInAlt className="me-2" /> Login
+              </button>
+              <button className="btn btn-outline-secondary">
+                <FaUserPlus className="me-2" /> Signup
+              </button>
+            </>
+          ) : (
+            <div className="d-flex align-items-center">
+              <span className="me-3">Bienvenue, <strong>{user.name}</strong></span>
+              <button className="btn btn-outline-danger" onClick={handleLogout}>
+                <FaSignOutAlt className="me-2" /> Logout
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Affichage des sections */}
+        {activeSection === "voitures" && renderVoitures()}
+        {activeSection === "reservations" && <ReservationsPage />}
+        {activeSection === "clients" && <ClientsPage />}
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 import NavBar from './components/NavBar';
-import Accueil from "./pages/accueil";
+import Accueil from "./pages/Accueil";
 import APropos from "./pages/APropos";
 import Contact from "./pages/Contact";
 import Reservation from "./pages/reservation";
@@ -13,6 +13,9 @@ import AdminPage from "./pages/AdminPage";
 import UserPage from "./pages/UserPage";
 import Footer from "./components/Footer";
 import Voitures from "./pages/Voitures";
+import Register from "./pages/Register";
+import AjouteVoiture from "./pages/AjouteVoiture";
+import ModifierVoiture from "./pages/ModifierVoiture";
 
 
 
@@ -44,8 +47,11 @@ function App() {
           <Route path="/admin/voitures" element={<VoituresList voitures={voitures} />} />
           <Route path="/voitures/:id" element={<VoitureForm />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/ajoute" element={<AjouteVoiture />} />
+          <Route path="/modifier/:id" element={<ModifierVoiture />} />
         </Routes>
       </div>
       <Footer />

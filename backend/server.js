@@ -39,12 +39,12 @@ db.connect((err) => {
         console.error("Erreur de connexion à la base de données :", err);
         return;
     }
-    console.log("✅ Connecté à la base de données MySQL");
+    console.log("Connecté à la base de données MySQL");
 });
 
 // Routes de base
 app.get('/', (req, res) => {
-    res.send('🚗 API de location de voitures opérationnelle');
+    res.send(' API de location de voitures opérationnelle');
 });
 
 app.use("/identification", identificationRoutes);
@@ -76,9 +76,6 @@ app.post("/voitures", upload.single("image"), (req, res) => {
     const dispo = disponible === 'true' || disponible === true ? 1 : 0;
     const image_url = req.file;
     console.log(image_url);
-    
-
-
 
     const sql = `INSERT INTO voitures (marque, modele, annee, prix_par_jour, disponible, image_url) VALUES (?, ?, ?, ?, ?, ?)`;
     db.query(sql, [marque, modele, annee, prix_par_jour, dispo, image_url.filename], (err) => {
