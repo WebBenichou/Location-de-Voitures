@@ -30,8 +30,9 @@ export default function Accueil({ voitures }) {
                     </Carousel.Caption>
                 </Carousel.Item>
             </Carousel>
-
-            {/* Liste des voitures en cards */}
+            
+           
+            Liste des voitures en cards
             <Container className="py-5">
                 <h2 className="text-center mb-4">Nos voitures disponibles</h2>
                 <Row>
@@ -55,48 +56,41 @@ export default function Accueil({ voitures }) {
                     ))}
                 </Row>
             </Container>
+
+             {/* <div className="container mt-5">
+                <h2 className="mb-4">Benichou Lux Car : trouvez une location de voiture pas chère</h2>
+                <div className="row">
+                    {voitures.map((voiture, index) => (
+                        <div className="col-md-4 mb-4" key={index}>
+                            <Card className="h-100">
+                                <Card.Img
+                                    variant="top"
+                                    src={voiture.image}
+                                    style={{ height: "180px", objectFit: "contain" }}
+                                />
+                                <Card.Body className="d-flex flex-column justify-content-between">
+                                    <Card.Title>{voiture.categorie}</Card.Title>
+                                    <Card.Text>{voiture.portes}</Card.Text>
+                                    <div className="d-flex justify-content-between mb-2">
+                                        <span>
+                                            <i className="bi bi-person-fill"></i> {voiture.passagers}
+                                        </span>
+                                        <span>
+                                            <i className="bi bi-suitcase-fill"></i> {voiture.bagages}
+                                        </span>
+                                    </div>
+                                    <div className="text-end fw-bold">
+                                        À partir de {voiture.prix} DH<br />
+                                        <small className="text-muted">par jour</small>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    ))}
+                </div>
+            </div> */}
         </div>
     );
 }
 
 
-
-/*
- <Container className="mt-5">
-                <h2 className="text-center mb-4">Nos voitures disponibles</h2>
-                <Row>
-                    {voitures && voitures.length > 0 ? (
-                        voitures.map(voiture => (
-                            <Col md={4} sm={6} xs={12} key={voiture.id} className="mb-4">
-                                <Card>
-                                    <Card.Img
-                                        variant="top"
-                                        src={
-                                            voiture.image_url
-                                                ? `http://localhost:9000${voiture.image_url}`
-                                                : "https://via.placeholder.com/300x200.png?text=Pas+de+photo"
-                                        }
-                                        style={{ height: "200px", objectFit: "cover" }}
-                                    />
-                                    <Card.Body>
-                                        <Card.Title>{voiture.marque} {voiture.modele}</Card.Title>
-                                        <Card.Text>
-                                            Année : {voiture.annee}<br />
-                                            Prix : {voiture.prix_par_jour} DH/jour<br />
-                                            Disponibilité : {voiture.disponible ? "Oui" : "Non"}
-                                        </Card.Text>
-                                        <Link to="/reservation">
-                                            <Button variant="primary" disabled={!voiture.disponible}>
-                                                Réserver
-                                            </Button>
-                                        </Link>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        ))
-                    ) : (
-                        <p>Aucune voiture disponible pour le moment.</p>
-                    )}
-                </Row>
-            </Container>
-*/

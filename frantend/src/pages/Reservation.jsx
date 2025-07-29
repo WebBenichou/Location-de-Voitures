@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const Reservation = ({ voitures }) => {
+const Reservation = ({ voitures, userId }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -10,7 +11,6 @@ const Reservation = ({ voitures }) => {
     const [selectedCar, setSelectedCar] = useState(null);
     const [formData, setFormData] = useState({
         nom: '',
-        email: '',
         telephone: '',
         dateDebut: '',
         dateFin: ''
@@ -18,7 +18,7 @@ const Reservation = ({ voitures }) => {
 
     useEffect(() => {
         if (carId) {
-            const car = voitures.find(v => v._id === carId);
+            const car = voitures.find(v => String(v.id) === String(carId));
             setSelectedCar(car);
         }
     }, [carId, voitures]);
@@ -30,12 +30,41 @@ const Reservation = ({ voitures }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log('Réservation:', { car: selectedCar, ...formData });
-        alert('Votre réservation a été enregistrée avec succès!');
-        navigate('/');
+        if (!selectedCar || !formData.dateDebut || !formData.dateFin) {
+            alert("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        const date1 = new Date(formData.dateDebut);
+        const date2 = new Date(formData.dateFin);
+        const diffDays = Math.ceil((date2 - date1) / (1000 * 60 * 60 * 24));
+
+        if (diffDays <= 0) {
+            alert("La date de fin doit être après la date de début.");
+            return;
+        }
+
+        const montant_total = diffDays * selectedCar.prix_par_jour;
+
+        try {
+            const res = await axios.post("http://localhost:9000/reservations", {
+                user_id: userId || 1,
+                voiture_id: selectedCar.id,
+                date_debut: formData.dateDebut,
+                date_fin: formData.dateFin,
+                montant_total
+            });
+
+            console.log(res.data);
+            alert("Réservation enregistrée avec succès !");
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+            alert("Erreur lors de la réservation !");
+        }
     };
 
     return (
@@ -47,21 +76,23 @@ const Reservation = ({ voitures }) => {
                     <form onSubmit={handleSubmit}>
                         {selectedCar ? (
                             <div className="mb-4 p-3 bg-light rounded">
-                                <h4>Vous réservez: {selectedCar.marque} {selectedCar.modele}</h4>
-                                <p>Prix: {selectedCar.prix_par_jour} DH/jour</p>
+                                <h4>Vous réservez : {selectedCar.marque} {selectedCar.modele}</h4>
+                                <p>Prix : {selectedCar.prix_par_jour} DH/jour</p>
                             </div>
                         ) : (
                             <div className="mb-3">
                                 <label className="form-label">Choisir un véhicule</label>
                                 <select
                                     className="form-select"
-                                    onChange={(e) => setSelectedCar(voitures.find(v => v._id === e.target.value))}
+                                    onChange={(e) =>
+                                        setSelectedCar(voitures.find(v => String(v.id) === e.target.value))
+                                    }
                                     required
                                 >
                                     <option value="">Sélectionnez un véhicule</option>
                                     {voitures.map(voiture => (
-                                        <option key={voiture._id} value={voiture._id}>
-                                            {voiture.marque} {voiture.modele}  {voiture.prix_par_jour} DH/jour
+                                        <option key={voiture.id} value={voiture.id}>
+                                            {voiture.marque} {voiture.modele} - {voiture.prix_par_jour} DH/jour
                                         </option>
                                     ))}
                                 </select>
@@ -81,31 +112,17 @@ const Reservation = ({ voitures }) => {
                             />
                         </div>
 
-                        <div className="row">
-                            <div className="col-md-6 mb-3">
-                                <label htmlFor="email" className="form-label">Email</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="col-md-6 mb-3">
-                                <label htmlFor="telephone" className="form-label">Téléphone</label>
-                                <input
-                                    type="tel"
-                                    className="form-control"
-                                    id="telephone"
-                                    name="telephone"
-                                    value={formData.telephone}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="telephone" className="form-label">Téléphone</label>
+                            <input
+                                type="tel"
+                                className="form-control"
+                                id="telephone"
+                                name="telephone"
+                                value={formData.telephone}
+                                onChange={handleChange}
+                                required
+                            />
                         </div>
 
                         <div className="row">
@@ -134,8 +151,8 @@ const Reservation = ({ voitures }) => {
                                 />
                             </div>
                         </div>
-
-                        <button type="submit" className="btn btn-warning">
+                        <br></br>
+                        <button type="submit" className="btn btn-warning ">
                             Confirmer la réservation
                         </button>
                     </form>
@@ -145,7 +162,7 @@ const Reservation = ({ voitures }) => {
                     {selectedCar && (
                         <div className="card">
                             <img
-                                src={`http://localhost:9000${selectedCar.image_url}`}
+                                src={`http://localhost:9000/uploads/${selectedCar.image_url}`}
                                 className="card-img-top"
                                 alt={`${selectedCar.marque} ${selectedCar.modele}`}
                             />
@@ -160,7 +177,6 @@ const Reservation = ({ voitures }) => {
                         </div>
                     )}
                 </div>
-
             </div>
         </div>
     );
