@@ -37,7 +37,8 @@ const Register = () => {
     }
 
     return (
-        <div className="container mt-5">
+      <div className="bg-secondary p-5">
+          <div className="container mt-5">
             <h2>Connexion</h2>
             <form onSubmit={handleLogin}> {/* Correction ici */}
                 <div className="mb-3">
@@ -100,6 +101,7 @@ const Register = () => {
             </form>
             {message && <div className="mt-3 alert alert-info">{message}</div>}
         </div>
+      </div>
     );
 };
 

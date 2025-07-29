@@ -6,9 +6,9 @@ const Voitures = ({ voitures }) => {
 
   return (
     <div className="voiture">
-      <section className="hero-section text-center py-5 bg-light">
-        <h1>Bienvenue chez Benichou Lux Car</h1>
-        <p>Découvrez notre collection exclusive de véhicules haut de gamme</p>
+      <section className="hero-section text-center p-5 bg-dark text-light fs-4">
+        <h1>Bienvenue chez Benichou Lux Car</h1><br></br>
+        <p>Découvrez notre collection exclusive de véhicules alliant performance, élégance et technologie de pointe. Offrez-vous une expérience de conduite unique dès aujourd'hui.</p>
         <Link to="/reservation" className="btn btn-warning mt-3">Réserver maintenant</Link>
       </section>
 
