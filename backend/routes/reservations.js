@@ -28,13 +28,14 @@ router.get("/", (_, res) => {
     const sql = `SELECT 
         u.nom AS nom,
         u.prenom AS prenom,
+        u.telephone AS telephone,     
         c.*,
         r.date_debut,
         r.date_fin
     FROM reservations r
     JOIN users u ON r.user_id = u.id
     JOIN voitures c ON r.voiture_id = c.id`;
-    
+
     db.query(sql, (err, results) =>
         err ? res.status(500).send(err) : res.json(results)
     );
@@ -97,13 +98,13 @@ module.exports = router;
 
 
 // router.get("/", (_, res) => {
-//     const sql = `SELECT 
+//     const sql = `SELECT
 //     u.nom AS nom,
 //     u.prenom AS prenom,
 //     c.*,
 //     r.date_debut,
 //     r.date_fin
-// FROM reservation 
+// FROM reservation
 // JOIN user u ON reservation.user_id = u.id
 // JOIN voiture c ON rreservation.voiture_id = c.id;
 // `

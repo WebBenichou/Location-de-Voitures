@@ -2,12 +2,12 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import {
     FaFacebook,
-    FaTwitter,
+  
     FaInstagram,
     FaMapMarkerAlt,
     FaPhone,
     FaEnvelope,
-    FaCar,
+
     FaWhatsapp,
     FaGithub,
     FaTiktok
@@ -58,11 +58,11 @@ const Footer = () => {
                     </div>
                 </Col>
                 {/* Liens rapides */}
-                <Col lg={3} md={6} className="mb-4 mb-md-0">
+                <Col lg={3} md={6} className="mb-4 mb-md-0 ">
                     <h5 className="text-uppercase mb-4">Liens rapides</h5>
                     <ul className="list-unstyled">
                         <li className="mb-2">
-                            <Link to="/" className="text-light">Accueil</Link>
+                            <Link to="/" className="text-light ">Accueil</Link>
                         </li>
                         <li className="mb-2">
                             <Link to="/apropos" className="text-light">À propos</Link>
@@ -74,7 +74,7 @@ const Footer = () => {
                             <Link to="/contact" className="text-light">Contact</Link>
                         </li>
                         <li className="mb-2">
-                            <Link to="/admin" className="text-light">Espace Admin</Link>
+                            <Link to="/admin" className="text-light"></Link>
                         </li>
                     </ul>
                 </Col>

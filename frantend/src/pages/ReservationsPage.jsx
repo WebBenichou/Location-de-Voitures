@@ -134,12 +134,12 @@ const ReservationsPage = () => {
                   {/* Informations de la voiture */}
                   <div className="mb-3">
                     <h5 className="card-title mb-1">
-                      {reservation.voiture?.marque || "Marque inconnue"} - {reservation.voiture?.model || "Modèle inconnu"}
+                      {reservation.marque || "Marque inconnue"} - {reservation.modele || "Modèle inconnu"}
                     </h5>
-                    {reservation.voiture?.image_url && (
+                    {reservation.image && (
                       <img 
-                        src={reservation.voiture.image_url} 
-                        alt={`${reservation.voiture.marque} ${reservation.voiture.model}`}
+                        src={reservation.image_url} 
+                        alt={`${reservation.marque} ${reservation.modele}`}
                         className="img-fluid mb-2 rounded"
                         style={{maxHeight: '150px', objectFit: 'cover'}}
                       />
@@ -150,10 +150,10 @@ const ReservationsPage = () => {
                   <div className="mb-3 border-top pt-2">
                     <h6 className="card-subtitle mb-2">Client:</h6>
                     <p className="mb-1">
-                      {reservation.user?.nom || "Nom inconnu"} {reservation.user?.prenom || "Prénom inconnu"}
+                      {reservation.nom || "Nom inconnu"} {reservation.prenom || "Prénom inconnu"}
                     </p>
                     <p className="text-muted small mb-0">
-                      Tél: {reservation.user?.telephone || "Non renseigné"}
+                      Tél: {reservation.telephone || "Non renseigné"}
                     </p>
                   </div>
                   

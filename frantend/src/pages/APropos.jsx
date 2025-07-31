@@ -21,7 +21,7 @@ const APropos = () => {
                     <div className="col-md-6 fs-5">
                         <h2>Notre histoire</h2>
                         <p>
-                            Fondée en 2010, <strong>Benichou Lux Car</strong> est devenue une référence dans la location
+                            Fondée en 2022, <strong>Benichou Lux Car</strong> est devenue une référence dans la location
                             de véhicules haut de gamme au Maroc. Notre passion pour l'automobile se
                             reflète dans chaque service que nous proposons.
                         </p>
@@ -36,7 +36,7 @@ const APropos = () => {
                 </div>
 
             </div>
-            <div className="bg-black ">
+            <div className="bg-black p-4 ">
                 {/* Section : Comment ça marche */}
                 <h1 className="text-warning text-center mb-4 py-5">Comment ça marche</h1>
                 <p className="text-center text-light mb-5 fs-5">

@@ -10,7 +10,7 @@ export default function Accueil({ voitures }) {
                 <Carousel.Item>
                     <img className="d-block w-100" src="images/location-2.jpg" alt="voiture" />
                     <Carousel.Caption>
-                        <div className="text-warning">
+                        <div className="text-warning fs-1">
                             <h1>Louez la voiture de vos rêves</h1>
                             <p>Rapide, facile et à petit prix.</p>
                         </div>
@@ -19,15 +19,19 @@ export default function Accueil({ voitures }) {
                 <Carousel.Item>
                     <img className="d-block w-100" src="images/location-1.jpg" alt="voiture luxe" style={{ height: "850px", width: "100%", objectFit: "cover" }} />
                     <Carousel.Caption>
-                        <h1>Confort et sécurité</h1>
-                        <p>Nos voitures sont bien entretenues et assurées.</p>
+                        <div className="text-warning fs-1">
+                            <h1>Confort et sécurité</h1>
+                            <p>Nos voitures sont bien entretenues et assurées.</p>
+                        </div>
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
                     <img className="d-block w-100" src="images/location-3.jpg" alt="route" />
                     <Carousel.Caption>
-                        <h1>Partez à l'aventure</h1>
-                        <p>Réservez maintenant votre prochain trajet !</p>
+                        <div className="text-warning fs-1">
+                            <h1>Partez à l'aventure</h1>
+                            <p>Réservez maintenant votre prochain trajet !</p>
+                        </div>
                     </Carousel.Caption>
                 </Carousel.Item>
             </Carousel>

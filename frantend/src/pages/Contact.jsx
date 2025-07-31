@@ -69,10 +69,10 @@ const Contact = () => {
                 <div className="col-md-6">
                     <h2>Coordonnées</h2>
                     <p>
-                        <strong>Adresse:</strong> Nahda 45, 22000 Azilal, Maroc
+                        <strong>Adresse:</strong> Hay Nahda 45, 22000 Azilal, Maroc
                     </p>
                     <p>
-                        <strong>Téléphone:</strong>06 02 39 35 64 
+                        <strong>Téléphone:</strong> 06 02 39 35 64 
                     </p>
                     <p>
                         <strong>Email:</strong> contact@benichouluxcar.com
