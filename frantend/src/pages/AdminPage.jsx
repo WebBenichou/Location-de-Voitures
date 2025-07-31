@@ -153,7 +153,7 @@ const AdminPage = () => {
                     </button>
                   </td>
                 </tr>
-              ))
+              ))       
             )}
           </tbody>
         </table>
@@ -171,21 +171,21 @@ const AdminPage = () => {
         <div className="d-flex justify-content-end mb-3">
           {!user ? (
             <>
-              <button className="btn btn-outline-warning me-2" onClick={handleLogin}>
-                <FaSignInAlt className="me-2" /> Login
-              </button>
-              <button className="btn btn-outline-secondary">
-                <FaUserPlus className="me-2" /> Signup
-              </button>
+              <NavLink to={""} className="btn btn-outline-warning me-2" onClick={handleLogin}>
+                <FaSignInAlt className="me-2" /> Se connecter
+              </NavLink>
+              <NavLink to={"/register"} className="btn btn-outline-secondary">
+                <FaUserPlus className="me-2" /> S'inscrire
+              </NavLink>
             </>
           ) : (
             <div className="d-flex align-items-center">
               <span className="me-3">
                 Bienvenue, <strong>{user.name}</strong>
               </span>
-              <button className="btn btn-outline-warning" onClick={handleLogout}>
-                <FaSignOutAlt className="me-2" /> Logout
-              </button>
+              <NavLink to={"/"} className="btn btn-outline-warning" onClick={handleLogout}>
+                <FaSignOutAlt className="me-2" /> Déconnexion
+              </NavLink>
             </div>
           )}
         </div>

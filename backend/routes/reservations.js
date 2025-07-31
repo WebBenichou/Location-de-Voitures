@@ -26,19 +26,21 @@ router.post("/", (req, res) => {
 // GET all
 router.get("/", (_, res) => {
     const sql = `SELECT 
-    u.nom AS nom,
-    u.prenom AS prenom,
-    c.*,
-    r.date_debut,
-    r.date_fin
-FROM reservation r
-JOIN user u ON r.user_id = u.id
-JOIN car c ON r.car_id = c.id;
-`
-    db.query("SELECT * FROM reservations", (err, results) =>
+        u.nom AS nom,
+        u.prenom AS prenom,
+        c.*,
+        r.date_debut,
+        r.date_fin
+    FROM reservations r
+    JOIN users u ON r.user_id = u.id
+    JOIN voitures c ON r.voiture_id = c.id`;
+    
+    db.query(sql, (err, results) =>
         err ? res.status(500).send(err) : res.json(results)
     );
 });
+
+
 
 // GET one
 router.get("/:id", (req, res) => {
@@ -92,3 +94,20 @@ router.delete("/:id", (req, res) => {
 });
 
 module.exports = router;
+
+
+// router.get("/", (_, res) => {
+//     const sql = `SELECT 
+//     u.nom AS nom,
+//     u.prenom AS prenom,
+//     c.*,
+//     r.date_debut,
+//     r.date_fin
+// FROM reservation 
+// JOIN user u ON reservation.user_id = u.id
+// JOIN voiture c ON rreservation.voiture_id = c.id;
+// `
+//     db.query("SELECT * FROM reservations", (err, results) =>
+//         err ? res.status(500).send(err) : res.json(results)
+//     );
+// });

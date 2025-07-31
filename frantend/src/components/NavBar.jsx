@@ -46,13 +46,13 @@ const NavBar = ({ user }) => {
                 
               >
                 <FaUser className="me-2" />
-                Login
+                Connecter
               </NavLink>
               <NavLink to={"/register"}
                 className="btn btn-outline-warning"
           
               >
-                Signup
+                Inscrire
               </NavLink>
             </>
           ) : (

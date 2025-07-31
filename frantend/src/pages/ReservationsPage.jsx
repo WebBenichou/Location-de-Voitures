@@ -35,6 +35,7 @@ const ReservationsPage = () => {
     setLoading(true);
     try {
       const res = await axios.get("http://localhost:9000/reservations");
+      console.log("Données des réservations:", res.data);
       setReservations(res.data);
       setError(null);
     } catch (err) {
@@ -72,9 +73,36 @@ const ReservationsPage = () => {
     return new Date(dateString).toLocaleDateString('fr-FR', options);
   };
 
+  // Fonction pour générer une clé unique
+  const generateUniqueKey = (reservation) => {
+    return [
+      reservation.id,
+      reservation.user?.id || 'no-user',
+      reservation.voiture?.id || 'no-car',
+      new Date(reservation.date_debut).getTime(),
+      new Date(reservation.date_fin).getTime()
+    ].join('-');
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Liste des Réservations</h2>
+      
+      {/* Filtre par statut */}
+      <div className="mb-4">
+        <label className="me-2">Filtrer par statut :</label>
+        <select 
+          className="form-select w-auto d-inline-block"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value={STATUS.ALL}>Tous</option>
+          <option value={STATUS.PENDING}>En attente</option>
+          <option value={STATUS.ACCEPTED}>Acceptées</option>
+          <option value={STATUS.REJECTED}>Rejetées</option>
+        </select>
+      </div>
+
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status">
@@ -88,11 +116,14 @@ const ReservationsPage = () => {
       ) : (
         <div className="row g-4">
           {filteredReservations.map((reservation) => (
-            <div key={reservation.id} className="col-md-6 col-lg-4">
+            <div 
+              key={generateUniqueKey(reservation)}
+              className="col-md-6 col-lg-4"
+            >
               <div className="card h-100 shadow-sm">
                 <div className="card-header d-flex justify-content-between align-items-center bg-light">
                   <div>
-                    <span className="text-muted small">N°: {reservation.id}</span>
+                    <span className="text-muted small">Réservation N° : {reservation.id}</span>
                   </div>
                   <span className={`badge bg-${statusColors[reservation.statut]} text-capitalize`}>
                     {reservation.statut}
@@ -100,16 +131,34 @@ const ReservationsPage = () => {
                 </div>
                 
                 <div className="card-body">
+                  {/* Informations de la voiture */}
                   <div className="mb-3">
                     <h5 className="card-title mb-1">
-                      {reservation.voiture_marque || reservation.voiture?.marque || "Marque non spécifiée"}
+                      {reservation.voiture?.marque || "Marque inconnue"} - {reservation.voiture?.model || "Modèle inconnu"}
                     </h5>
-                    <h6 className="card-subtitle text-muted">
-                      {reservation.client_name || reservation.client?.name || "Client inconnu"}
-                    </h6>
+                    {reservation.voiture?.image_url && (
+                      <img 
+                        src={reservation.voiture.image_url} 
+                        alt={`${reservation.voiture.marque} ${reservation.voiture.model}`}
+                        className="img-fluid mb-2 rounded"
+                        style={{maxHeight: '150px', objectFit: 'cover'}}
+                      />
+                    )}
                   </div>
                   
-                  <div className="d-flex justify-content-between mb-2">
+                  {/* Informations de l'utilisateur */}
+                  <div className="mb-3 border-top pt-2">
+                    <h6 className="card-subtitle mb-2">Client:</h6>
+                    <p className="mb-1">
+                      {reservation.user?.nom || "Nom inconnu"} {reservation.user?.prenom || "Prénom inconnu"}
+                    </p>
+                    <p className="text-muted small mb-0">
+                      Tél: {reservation.user?.telephone || "Non renseigné"}
+                    </p>
+                  </div>
+                  
+                  {/* Dates de réservation */}
+                  <div className="d-flex justify-content-between mb-2 border-top pt-2">
                     <div>
                       <small className="text-muted">Début:</small>
                       <div className="fw-bold">{formatDate(reservation.date_debut)}</div>
@@ -121,13 +170,14 @@ const ReservationsPage = () => {
                   </div>
                 </div>
                 
+                {/* Actions */}
                 <div className="card-footer bg-white border-top-0">
                   <div className="d-flex justify-content-between gap-2">
                     {Object.entries(STATUS)
                       .filter(([key]) => key !== 'ALL')
                       .map(([key, status]) => (
                         <button
-                          key={key}
+                          key={`action-${reservation.id}-${key}`}
                           onClick={() => updateReservationStatus(reservation.id, status)}
                           className={`btn btn-sm flex-grow-1 ${
                             reservation.statut === status 
